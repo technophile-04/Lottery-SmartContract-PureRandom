@@ -1,13 +1,13 @@
-// SPDX-License-Identifier:MIT
-pragma solidity 0.8.8;
-
-// Lottery
 /* 
 1)Player should enter in lottery
 2)Pick a random winner(verifiable random)
 3)Pick a winner every 5 min
 4)Use : Chianlink oralce -> automated execution and VRF
  */
+
+// SPDX-License-Identifier:MIT
+pragma solidity 0.8.8;
+
 import "@chainlink/contracts/src/v0.8/VRFConsumerBaseV2.sol";
 import "@chainlink/contracts/src/v0.8/interfaces/VRFCoordinatorV2Interface.sol";
 import "@chainlink/contracts/src/v0.8/interfaces/KeeperCompatibleInterface.sol";
@@ -16,6 +16,12 @@ error Lottery__NotEnoughETHEntered();
 error Lottery__TransferFailed();
 error Lottery__NotOpen();
 error Lottery__UpKeepNotNeeded(uint256 currentBalance, uint256 numPlayers, uint256 lotteryState);
+
+/** @title Lottery contract
+ *  @author Shiv Bhonde
+ *  @notice This contract is for creating untamparable decentralized smart contract
+ *  @dev This implements chain link VRF v2 and Keepers
+ */
 
 contract Lottery is VRFConsumerBaseV2, KeeperCompatibleInterface {
     /* Type declarations */
@@ -30,6 +36,7 @@ contract Lottery is VRFConsumerBaseV2, KeeperCompatibleInterface {
     LotteryState private s_lotteryState;
     uint256 private s_lastTimeStamp;
 
+    /* Immutables / Variables for chainlink vrfCoordinator & keepers */
     uint256 private immutable i_entranceFee;
     bytes32 private immutable i_gasLane;
     uint64 private immutable i_subscriptionId;
@@ -63,6 +70,7 @@ contract Lottery is VRFConsumerBaseV2, KeeperCompatibleInterface {
         i_interval = interval;
     }
 
+    /* Functions */
     function enterLottey() public payable {
         if (msg.value < i_entranceFee) {
             revert Lottery__NotEnoughETHEntered();
@@ -73,14 +81,14 @@ contract Lottery is VRFConsumerBaseV2, KeeperCompatibleInterface {
         }
 
         s_players.push(payable(msg.sender));
-        // Emit an event when we update an dynamic sise array or mapping
+        // Emit an event when we update an dynamic size array or mapping
         // Events are named with function name reversed
 
         emit LotteryEnter(msg.sender);
     }
 
     /**
-     * @dev this the function that the chainlink keeper node call
+     * @dev this is the function that the chainlink keeper node call
      * they look for `upkeepNeeded` to be true
      * The following should be true inorder to make `upkeepNeeded` true :
      * 1)Time interval should have passed
@@ -153,11 +161,36 @@ contract Lottery is VRFConsumerBaseV2, KeeperCompatibleInterface {
     }
 
     /* View / Pure functions */
-    function getEntraceFee() public view returns (uint256) {
+    function getEntranceFee() public view returns (uint256) {
         return i_entranceFee;
     }
 
     function getPlayer(uint256 index) public view returns (address) {
         return s_players[index];
+    }
+
+    function getLotteryState() public view returns (LotteryState) {
+        return s_lotteryState;
+    }
+
+    function getNumWords() public pure returns (uint256) {
+        // Using pure because we are technically not accesing storage for NUM_WORDS because its constant
+        return NUM_WORDS;
+    }
+
+    function getNumberOfPlayers() public view returns (uint256) {
+        return s_players.length;
+    }
+
+    function getLastTimeStamp() public view returns (uint256) {
+        return s_lastTimeStamp;
+    }
+
+    function getRequestConfirmations() public pure returns (uint256) {
+        return REQUEST_CONFIRMATION;
+    }
+
+    function getInterval() public view returns (uint256) {
+        return i_interval;
     }
 }
