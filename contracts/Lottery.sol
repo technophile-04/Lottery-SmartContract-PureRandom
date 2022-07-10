@@ -71,7 +71,7 @@ contract Lottery is VRFConsumerBaseV2, KeeperCompatibleInterface {
     }
 
     /* Functions */
-    function enterLottey() public payable {
+    function enterLottery() public payable {
         if (msg.value < i_entranceFee) {
             revert Lottery__NotEnoughETHEntered();
         }
@@ -192,5 +192,9 @@ contract Lottery is VRFConsumerBaseV2, KeeperCompatibleInterface {
 
     function getInterval() public view returns (uint256) {
         return i_interval;
+    }
+
+    function getRecentWinner() public view returns (address) {
+        return s_recentWinner;
     }
 }
