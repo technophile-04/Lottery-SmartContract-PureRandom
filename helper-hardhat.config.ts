@@ -7,6 +7,7 @@ export interface networkConfigItem {
     gasLane: string;
     callBackGasLimit: string;
     interval: string;
+    subscriptionId?: string;
 }
 
 export interface networkConfigInfo {
@@ -21,6 +22,7 @@ const networkConfig: networkConfigInfo = {
         gasLane: "0xd89b2bf150e3b9e13446986e571fb9cab24b13cea0a43ea20a6049a85cc807cc",
         callBackGasLimit: "500000",
         interval: "60",
+        subscriptionId: "4040",
     },
     31337: {
         blockConfirmations: 1,

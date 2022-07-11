@@ -204,7 +204,7 @@ import { Lottery, VRFCoordinatorV2Mock } from "../../typechain";
                   // performUpKeep (mock being chainLink keeper)
                   // fullFillRandomWords(mock being  chainLink VRF)
 
-                  await new Promise(async (resolve, reject) => {
+                  await new Promise<void>(async (resolve, reject) => {
                       // Listen for event and wait for it
                       lottery.once("WinnerPicked", async () => {
                           console.log("Winner Found");
@@ -237,7 +237,7 @@ import { Lottery, VRFCoordinatorV2Mock } from "../../typechain";
                           } catch (error) {
                               reject(error);
                           }
-                          resolve(1);
+                          resolve();
                       });
 
                       // call performUpKeep which will pass throw an event wit requestId(mocking keeper)

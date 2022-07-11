@@ -24,7 +24,7 @@ developmentChains.includes(network.name)
                   const accounts = await ethers.getSigners();
                   const deployerSignerAccount: SignerWithAddress = accounts[0];
 
-                  await new Promise(async (resolve, reject) => {
+                  await new Promise<void>(async (resolve, reject) => {
                       lottery.once("WinnerPicked", async () => {
                           console.log("Winner Picked event fired!");
                           try {
@@ -33,6 +33,7 @@ developmentChains.includes(network.name)
                               const lotteryState = await lottery.getLotteryState();
                               const winnerEndingBalance = await deployerSignerAccount.getBalance();
                               const endingTimeStamp = await lottery.getLastTimeStamp();
+                              console.log(winnerEndingBalance.toString());
 
                               await expect(lottery.getPlayer(0)).to.be.reverted;
                               assert.equal(lotteryState.toString(), "0");
@@ -45,16 +46,18 @@ developmentChains.includes(network.name)
                                   winnerStartingBalance.add(entranceFee).toString()
                               );
 
-                              assert.equal(endingTimeStamp > startTime);
+                              assert(endingTimeStamp > startTime);
                           } catch (error) {
                               reject(error);
                           }
 
-                          resolve(1);
+                          resolve();
                       });
 
+                      console.log("Entering lottery....");
                       await lottery.enterLottery({ value: entranceFee });
                       const winnerStartingBalance = await deployerSignerAccount.getBalance();
+                      console.log("Starting balance : ", winnerStartingBalance.toString());
                   });
               });
           });

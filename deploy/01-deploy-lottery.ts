@@ -30,6 +30,7 @@ const deployFunc: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
         await txnRes.wait(1);
     } else {
         VRFCoordinatorV2Address = networkConfig[chainId!]["VRFCoordinatorV2"];
+        subId = networkConfig[chainId!]["subscriptionId"];
     }
 
     const ENTRANCE_FEE = networkConfig[chainId!]["entranceFee"];
