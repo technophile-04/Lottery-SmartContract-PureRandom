@@ -21,8 +21,9 @@ const networkConfig: networkConfigInfo = {
         entranceFee: ethers.utils.parseEther("0.01"),
         gasLane: "0xd89b2bf150e3b9e13446986e571fb9cab24b13cea0a43ea20a6049a85cc807cc",
         callBackGasLimit: "500000",
-        interval: "60",
-        subscriptionId: "4040",
+        interval: "120",
+        // subscriptionId: "4040",
+        subscriptionId: "8436",
     },
     31337: {
         blockConfirmations: 1,
